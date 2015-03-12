@@ -1,0 +1,18 @@
+/* NPM */
+node_modules
+.npm/
+.config/
+
+/* Public */
+public/lib
+public/build
+
+/* Git files */
+.orig
+
+/* OSX */
+.DS_Store
+.AppleDouble
+.LSOverride
+.Spotlight-V100
+.Trashes
