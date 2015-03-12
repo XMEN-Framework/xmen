@@ -1,5 +1,5 @@
 /**
- * User Controller
+ * Frontend Controller
  */
 "use strict";
 
