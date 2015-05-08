@@ -88,6 +88,13 @@ if (config.useSSL) {
 
 	//Create HTTP app.
 	app.listen(config.PORT);
+	console.log('\n\n=====================================================\n');
+	console.log('      _/      _/  _/      _/  _/_/_/_/  _/      _/');
+	console.log('       _/  _/    _/_/  _/_/  _/        _/_/    _/');
+	console.log('        _/      _/  _/  _/  _/_/_/    _/  _/  _/');
+	console.log('     _/  _/    _/      _/  _/        _/    _/_/');
+	console.log('  _/      _/  _/      _/  _/_/_/_/  _/      _/');
+	console.log('\n=====================================================\n\n');
 	console.log('XMEN framework app started on ' + config.app.url);
 }
 
