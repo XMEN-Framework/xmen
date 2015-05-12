@@ -8,7 +8,7 @@
     "start": "node server.js"
   },
   "author": "John Taylor",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "connect-flash": "~0.1.1",
     "json3": "~3.3.2",
