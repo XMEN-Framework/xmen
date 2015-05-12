@@ -7,7 +7,11 @@ Website: [xmen.io](http://xmen.io)
 
 ## Installation
 
-XMEN requires MongoDB to be installed and NodeJS.
+XMEN requires [MongoDB](https://www.mongodb.org/) and [NodeJS](https://nodejs.org/) to be installed.
+
+    git clone git@github.com:XMEN-Framework/xmen.git
+    cd xmen
+    npm install
 
 
 ## Start the server
