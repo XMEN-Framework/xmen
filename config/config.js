@@ -15,15 +15,16 @@ nconf.env(['PORT']);
 
 module.exports = {
     'development': {
+        'hasDB': false,
         'db': 'mongodb://localhost/xmen', //example: mongodb://localhost/my-db
         'ROOT': rootPath,
-        'PORT': 8000,
+        'PORT': 3000,
         'CONFIG_ROOT': rootPath + '/config',
         'APP_ROOT': rootPath + '/app',
         'PUBLIC_ROOT': rootPath + '/public',
         'app': {
             'name': 'XMEN Framework - DEVELOPMENT',
-            'url': 'http://localhost:8000'
+            'url': 'http://localhost:3000'
         },
         'useSSL': false,
         'sslKeyPath': '',
@@ -33,6 +34,7 @@ module.exports = {
         'sslPassphrase': ''
     },
     'production': {
+        'hasDB': false,
         'db': '<mongodb connection>', //example: mongodb://localhost/my-db
         'ROOT': rootPath,
         'CONFIG_ROOT': rootPath + '/config',

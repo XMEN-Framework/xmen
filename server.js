@@ -5,7 +5,7 @@
 "use strict";
 
 process.on('uncaughtException', function(err) {
-	console.log("Uncaught exception!!!!");
+	console.log("Uncaught exception!");
 	console.log(err);
 	console.log(err.stack);
 });
@@ -29,18 +29,20 @@ var env = process.env.NODE_ENV || 'development'; //Default to development mode
 var configFile = require('./config/config.js');
 var config = configFile[env]; //Set the config variable to the environment setup.
 
-//Load middleware and services
-var mongoose = require('mongoose');
+if ( config.hasDB ) {
+	//Load middleware and services.
+	var mongoose = require('mongoose');
 
-//Bootstrap DB Connection
-var db = mongoose.connect(config.db, function( err ) {
-	if ( err ) throw err;
-}).connection;
+	//Bootstrap DB Connection
+	var db = mongoose.connect(config.db, function( err ) {
+		if ( err ) throw err;
+	}).connection;
 
-//Set DB connection events.
-db.on('error', function( err ) { console.log(err.message); }); //error
-db.on('open', function( ) { console.log("MongoDB connection open."); }); //open connection
-db.on('close', function( ) { console.log("MongoDB connection closed."); }); //close connection
+	//Set DB connection events.
+	db.on('error', function( err ) { console.log(err.message); }); //error
+	db.on('open', function( ) { console.log("MongoDB connection open."); }); //open connection
+	db.on('close', function( ) { console.log("MongoDB connection closed."); }); //close connection
+}
 
 //Bootstrap Express app.
 var app = express();
@@ -49,7 +51,7 @@ app.use(errorhandler({
 	dumpExceptions: true
 }));
 
-if (config.useSSL) {
+if ( config.useSSL ) {
 	//Set up SSL
 
 	var ca = []; //Certifications
