@@ -15,6 +15,7 @@ nconf.env(['PORT']);
 
 module.exports = {
     'development': {
+        'hasDB': true,
         'db': 'mongodb://localhost/xmen', //example: mongodb://localhost/my-db
         'ROOT': rootPath,
         'PORT': 8000,
@@ -33,6 +34,7 @@ module.exports = {
         'sslPassphrase': ''
     },
     'production': {
+        'hasDB': false,
         'db': '<mongodb connection>', //example: mongodb://localhost/my-db
         'ROOT': rootPath,
         'CONFIG_ROOT': rootPath + '/config',
