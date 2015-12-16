@@ -5,7 +5,7 @@
 "use strict";
 
 process.on('uncaughtException', function(err) {
-	console.log("Uncaught exception!!!!");
+	console.log("Uncaught exception!");
 	console.log(err);
 	console.log(err.stack);
 });
@@ -51,7 +51,7 @@ app.use(errorhandler({
 	dumpExceptions: true
 }));
 
-if (config.useSSL) {
+if ( config.useSSL ) {
 	//Set up SSL
 
 	var ca = []; //Certifications
