@@ -66,16 +66,18 @@ module.exports = function( app, config, passport ) {
 
 	app.use(methodOverride());
 
-	//Express/Mongo Session Storage
-	app.use(session({
-		secret: 'XMEN',
-		store: new mongoStore({
-			url: config.db,
-			collection: 'sessions'
-		}),
-		resave: true,
-		saveUninitialized: true
-	}));
+	if ( config.hasDB ) {
+		//Express/Mongo Session Storage
+		app.use(session({
+			secret: 'XMEN',
+			store: new mongoStore({
+				url: config.db,
+				collection: 'sessions'
+			}),
+			resave: true,
+			saveUninitialized: true
+		}));
+	}
 
 	app.use(flash());
 
