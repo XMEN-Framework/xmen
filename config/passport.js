@@ -1,11 +1,10 @@
 /**
  * Passport Configuration
  */
-"use strict";
-
 var mongoose = require('mongoose'),
 	LocalStrategy = require('passport-local').Strategy,
 	User = mongoose.model('User');
+
 
 module.exports = function( passport, config ) {
 
@@ -31,7 +30,6 @@ module.exports = function( passport, config ) {
 
 		User.findOne({ email: email })
 			.select('hashed_password provider salt email')
-			.populate('image_asset')
 			.exec( function( err, user ) {
 				//Error, just return
 				if ( err ) return next(err);

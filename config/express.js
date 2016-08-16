@@ -1,8 +1,6 @@
 /**
  * Express configuration
  */
-"use strict";
-
 var express = require('express'),
 	path = require('path'),
 	swig = require('swig'),
@@ -14,6 +12,7 @@ var express = require('express'),
 	methodOverride = require('method-override'),
 	mongoStore = require('connect-mongo')(session),
 	flash = require('connect-flash');
+
 
 module.exports = function( app, config, passport ) {
 	//Save the configs for later usage.
@@ -61,17 +60,17 @@ module.exports = function( app, config, passport ) {
 	app.use(cookieParser());
 
 	//Connect body parser
-	app.use(bodyParser.json({limit: 10000000})); //10 MB
+	app.use(bodyParser.json({limit: config.MAX_FILE_SIZE})); //10 MB
 	app.use(bodyParser.urlencoded({ extended: true }));
 
 	app.use(methodOverride());
 
-	if ( config.hasDB ) {
+	if ( config.DB ) {
 		//Express/Mongo Session Storage
 		app.use(session({
 			secret: 'XMEN',
 			store: new mongoStore({
-				url: config.db,
+				url: config.DB,
 				collection: 'sessions'
 			}),
 			resave: true,
