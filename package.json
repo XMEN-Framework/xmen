@@ -1,6 +1,6 @@
 {
   "name": "xmen",
-  "version": "2.0.0",
+  "version": "0.0.8",
   "description": "XMEN Framework - Any Frontend, MongoDB, Express, Node",
   "main": "index.js",
   "scripts": {
