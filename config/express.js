@@ -68,7 +68,7 @@ module.exports = function( app, config, passport ) {
 	if ( config.DB ) {
 		//Express/Mongo Session Storage
 		app.use(session({
-			secret: 'XMEN',
+			secret: config.SECRET,
 			store: new mongoStore({
 				url: config.DB,
 				collection: 'sessions'
