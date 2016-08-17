@@ -69,7 +69,7 @@ Example project structure of using the `config.js` above:
         config/
             config.js
         node_modules/
-        index.js
+        app.js
         package.json
 
 
