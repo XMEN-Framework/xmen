@@ -1,12 +1,12 @@
 {
   "name": "xmen",
   "version": "2.0.0",
-  "description": "",
+  "description": "XMEN Framework - Any Frontend, MongoDB, Express, Node",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "John Taylor",
+  "author": "John Taylor <johntayl89@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "async": "^2.0.1",

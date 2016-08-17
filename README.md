@@ -9,13 +9,33 @@ Website: [xmen.io](http://xmen.io)
 
 XMEN requires [MongoDB](https://www.mongodb.org/) and [NodeJS](https://nodejs.org/) to be installed.
 
-    git clone git@github.com:XMEN-Framework/xmen.git
-    cd xmen
-    npm install
+    npm install xmenio
 
 
-## Start the server
+## Project Structure
 
-Make sure your Mongo server is running (`mongod`).
+XMEN is comprised of smaller individually accessible apps, an app must be installed
+for it to be used.
 
-Start the server with `node server.js`.
+All apps must exist within the `app/` directory.
+
+
+## Models
+
+Registering models within XMEN works by setting up a Mongoose Schema. These models
+are automatically loaded.
+
+Include a `models.js` file within an app folder.
+
+
+## Routes
+
+XMEN apps can provide custom routes that are strucutred specifically for each app.
+These routes are automatically loaded.
+
+Include a `routes.js` file within an app folder.
+
+
+## Templates
+
+XMEN templates are rendered from a registered app's `templates/` directory.

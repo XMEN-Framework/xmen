@@ -99,31 +99,19 @@ var XMEN = {
 			for ( var i = 0, app; app = apps[i]; i++ ) {
 				try {
 					//Load Models
-					if ( fs.existsSync(appRoot + '/' + app + '/models') ) {
-						fs.readdirSync(appRoot + '/' + app + '/models').forEach(function(file) {
-							if ( file ) {
-								var modelFile = appRoot + '/' + app + '/models/' + file;
-								if ( fs.existsSync(modelFile) ) {
-									require(modelFile);
-								}
-							}
-						});
+					var modelFile = appRoot + '/' + app + '/models.js';
+					if ( fs.existsSync(modelFile) ) {
+						require(modelFile);
 					}
 
 					//Load Routes
-					if ( fs.existsSync(appRoot + '/' + app + '/routes') ) {
-						fs.readdirSync(appRoot + '/' + app + '/routes').forEach(function(file) {
-							if ( file ) {
-								var modelFile = appRoot + '/' + app + '/routes/' + file;
-								if ( fs.existsSync(modelFile) ) {
-									require(modelFile)(xmen.app, passport, xmen.routeMiddleware);
-								}
-							}
-						});
+					var routeFile = appRoot + '/' + app + '/routes.js';
+					if ( fs.existsSync(routeFile) ) {
+						require(routeFile)(xmen.app, passport, xmen.routeMiddleware);
 					}
 
 					//Load Views
-					xmen.appViewPaths.push(appRoot + '/' + app + '/views');
+					xmen.appViewPaths.push(appRoot + '/' + app + '/templates');
 				} catch ( e ) {
 					console.log("Failed loading app: ", app);
 					console.error(e.stack);
