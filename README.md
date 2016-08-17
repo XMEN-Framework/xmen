@@ -46,7 +46,7 @@ XMEN needs to be bootstrapped and there is a simple way to start the server.
 
     // app.js
 
-    var xmen = require('xmenio'),
+    var XMEN = require('xmenio'),
         config = require('./config.js');
 
     XMEN.assemble(config); //This initializes the XMEN app
