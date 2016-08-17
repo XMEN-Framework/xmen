@@ -19,11 +19,13 @@ module.exports = function( app, config, passport ) {
 	//Save the configs for later usage.
 	app.set('config', config);
 
+	//Show stack error
 	app.set('showStackError', true);
 
+	//Include helmet
 	app.use(helmet());
 
-	//Compress static files/json data.
+	//Compress static files.
 	app.use(compression({
 		filter: function ( req, res ) {
 			return (/json|text|javascript|css/).test(res.getHeader('Content-Type'));
@@ -31,13 +33,10 @@ module.exports = function( app, config, passport ) {
 		level: 9
 	}));
 
-	//Set the static root to server static files
+	//Set the static root to serve static files
 	app.use(express.static(config.STATIC_ROOT));
 
-	//Don't user logged for test env
-	if ( process.env.NODE_ENV !== 'test' ) {
-		app.use(morgan('dev'));
-	}
+	app.use(morgan('dev'));
 
 	//Set the templating engine.
 	app.engine('html', swig.renderFile);
@@ -50,6 +49,7 @@ module.exports = function( app, config, passport ) {
 	//Enable jsonp
 	app.enable("jsonp callback");
 
+	//Save the app env
 	app.locals.appENV = process.env.NODE_ENV;
 
 	//Cookie Parser
@@ -59,8 +59,10 @@ module.exports = function( app, config, passport ) {
 	app.use(bodyParser.json({limit: 10000000})); //10 MB
 	app.use(bodyParser.urlencoded({ extended: true }));
 
+	//Use method override
 	app.use(methodOverride());
 
+	//Store sessions if DB exists.
 	if ( config.DB ) {
 		//Express/Mongo Session Storage
 		app.use(session({
@@ -74,22 +76,23 @@ module.exports = function( app, config, passport ) {
 		}));
 	}
 
+	//Use flash messages
 	app.use(flash());
 
 	//Use passport session
 	app.use(passport.initialize());
 	app.use(passport.session());
 
-	// Assume 404 since no middleware responded.
+	// 404
 	app.use(function( err, req, res, next ) {
 		//Log it
-		console.log('Inside Express 404');
+		console.log(err.stack);
 
 		//Error page.
 		res.status(404).render('404', { error: 'Page not found.'});
 	});
 
-	//Assume "not found" in the rror msgs is a 404.
+	// 500
 	app.use(function( err, req, res, next ) {
 		//Treat as 404
 		if ( err.message.indexOf('not found') ) return next();
