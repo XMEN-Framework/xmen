@@ -1,8 +1,6 @@
 /**
  * User Model
  */
-"use strict";
-
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     crypto = require('crypto'),
@@ -18,23 +16,18 @@ var UserSchema = new Schema({
         type: String,
         default: ''
     },
+    username: {
+        type: String
+    },
     email: {
         type: String,
         unique: true
     },
 
-    //Access
-    last_login: {
-        type: Date,
-        default: Date.now()
-    },
-    updated_at: {
-        type: Date,
-        default:Date.now()
-    },
-    created_at: {
-        type: Date,
-        default:Date.now()
+    // Authorization
+    is_superuser: {
+        type: Boolean,
+        default: false
     },
 
     //Password
@@ -51,6 +44,19 @@ var UserSchema = new Schema({
         select: false
     },
 
+    //Access
+    last_login: {
+        type: Date,
+        default: Date.now()
+    },
+    updated_at: {
+        type: Date,
+        default:Date.now()
+    },
+    created_at: {
+        type: Date,
+        default:Date.now()
+    },
     deleted: {
         type: Boolean,
         default: false
@@ -78,7 +84,7 @@ UserSchema.virtual('password')
 UserSchema.virtual('full_name')
     .get(function() {
         try {
-            var fullName = this.first_name + ' ' + this.last_name
+            var fullName = this.first_name + ' ' + this.last_name;
             return fullName;
         } catch ( e ) {
             return '';
@@ -95,7 +101,6 @@ var validatePresenceOf = function( value ) {
 };
 
 //The below 2 validations only apply if you are signing up traditionally.
-
 UserSchema.path('email').validate(function( email ) {
     return email.length;
 }, 'Email cannot be blank.');
