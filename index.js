@@ -22,7 +22,7 @@ var XMEN = {
 	routeMiddleware: require('./config/middleware/authorization'),
 	app: null,
 	appViewPaths: [],
-	bootstrap: function( config ) {
+	assemble: function( config ) {
 		process.on('uncaughtException', function(err) {
 			console.log("Uncaught exception!");
 			console.log(err);
@@ -123,7 +123,6 @@ var XMEN = {
 	},
 	initAppViewPaths: function() {
 		//Set view paths.
-		console.log(this.appViewPaths);
 		this.app.set('views', this.appViewPaths);
 	}
 

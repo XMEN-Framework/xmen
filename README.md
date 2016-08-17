@@ -49,7 +49,7 @@ XMEN needs to be bootstrapped and there is a simple way to start the server.
     var xmen = require('xmenio'),
         config = require('./config.js');
 
-    XMEN.bootstrap(config); //This initializes the XMEN app
+    XMEN.assemble(config); //This initializes the XMEN app
 
 Simply run `node app.js` to get the server up and running.
 
