@@ -94,12 +94,3 @@ A routes module is passed the `app`, `passport`, and `auth` middleware.
 ## Templates
 
 XMEN templates are rendered from a registered app's `templates/` directory.
-
-
-# XMEN Administration
-
-XMEN comes with a full administration panel for viewing, creating, editing and
-deleting documents.
-
-XMEN Administration can be found at http://localhost:8000/admin. User authentication
-is built into XMEN.
