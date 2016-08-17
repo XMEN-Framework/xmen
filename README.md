@@ -23,18 +23,35 @@ config file looks like this:
         rootPath = path.normalize(__dirname);
 
     module.exports = {
-        'DB': 'mongodb://localhost/xmen',       //MongoDB connection
-        'PORT': 8000,                           //Port to run XMEN on
-        'APP_ROOT': rootPath + '/app',          //Define a custom app path
-        'STATIC_ROOT': rootPath + '/public',    //Define a custom static file path
-        'PUBLIC_URL': 'http://localhost:8000',  //Public URL
-        'INSTALLED_APPS': [                     //Apps to be registered
-            'custom_app'
-        ]
+        'development': {
+            'DB': 'mongodb://localhost/xmen',       //MongoDB connection
+            'PORT': 8000,                           //Port to run XMEN on
+            'SECRET': 'xmen',                       //Provide a project secret
+            'APP_ROOT': rootPath + '/app',          //Define a custom app path
+            'STATIC_ROOT': rootPath + '/public',    //Define a custom static file path
+            'PUBLIC_URL': 'http://localhost:8000',  //Public URL
+            'INSTALLED_APPS': [                     //Apps to be registered
+                'custom_app'
+            ]
+        }
     };
 
 These are the project settings that are available to any installed app. Extend
 this configuration to provide custom project values.
+
+
+## Start The App
+
+XMEN needs to be bootstrapped and there is a simple way to start the server.
+
+    // app.js
+
+    var xmen = require('xmenio'),
+        config = require('./config.js');
+
+    XMEN.bootstrap(config); //This initializes the XMEN app
+
+Simply run `node app.js` to get the server up and running.
 
 
 ## Project Structure
@@ -77,7 +94,6 @@ A routes module is passed the `app`, `passport`, and `auth` middleware.
 ## Templates
 
 XMEN templates are rendered from a registered app's `templates/` directory.
-
 
 
 # XMEN Administration

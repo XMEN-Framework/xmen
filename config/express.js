@@ -11,7 +11,8 @@ var express = require('express'),
 	morgan = require('morgan'),
 	methodOverride = require('method-override'),
 	mongoStore = require('connect-mongo')(session),
-	flash = require('connect-flash');
+	flash = require('connect-flash'),
+	helmet = require('helmet');
 
 
 module.exports = function( app, config, passport ) {
@@ -19,6 +20,8 @@ module.exports = function( app, config, passport ) {
 	app.set('config', config);
 
 	app.set('showStackError', true);
+
+	app.use(helmet());
 
 	//Compress static files/json data.
 	app.use(compression({
@@ -40,16 +43,9 @@ module.exports = function( app, config, passport ) {
 	app.engine('html', swig.renderFile);
 	app.set('view engine', 'html');
 
-	if ( process.env.NODE_ENV == 'production' ) {
-		//Cache templates.
-		app.set('view cache', true); //Enable Express template cache
-		swig.setDefaults({ cache: false }); //Disable swig template cache.
-	} else {
-		//Disable template cache in any other mode.
-		app.set('view cache', false);
-		swig.setDefaults({ cache: false }); //Disable swig template cache.
-	}
-
+	//Disable view cache.
+	app.set('view cache', false);
+	swig.setDefaults({ cache: false }); //Disable swig template cache.
 
 	//Enable jsonp
 	app.enable("jsonp callback");
@@ -60,7 +56,7 @@ module.exports = function( app, config, passport ) {
 	app.use(cookieParser());
 
 	//Connect body parser
-	app.use(bodyParser.json({limit: config.MAX_FILE_SIZE})); //10 MB
+	app.use(bodyParser.json({limit: 10000000})); //10 MB
 	app.use(bodyParser.urlencoded({ extended: true }));
 
 	app.use(methodOverride());

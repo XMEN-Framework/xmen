@@ -23,12 +23,13 @@ module.exports = function( passport, config ) {
 
 	//Use local strategy
 	passport.use(new LocalStrategy({
-		usernameField: 'email',
+		usernameField: 'username',
 		passwordField: 'password'
 	},
-	function( email, password, next ) {
+	function( username, password, next ) {
+		var query = (username.indexOf('@') === -1) ? {username: username} : {email: username};
 
-		User.findOne({ email: email })
+		User.findOne(query)
 			.select('hashed_password provider salt email')
 			.exec( function( err, user ) {
 				//Error, just return
@@ -36,12 +37,12 @@ module.exports = function( passport, config ) {
 
 				//If no user found.
 				if ( !user ) {
-					return next(null, false, { message: "Email or password is incorrect." });
+					return next(null, false, { message: "Username or password is incorrect." });
 				}
 
 				//Can't be authenticated (wrong password?)
 				if ( !user.authenticate(password) ) {
-					return next(null, false, { message: "Email or password is incorrect." });
+					return next(null, false, { message: "Username or password is incorrect." });
 				}
 
 				//Logged in, continue.
