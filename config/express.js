@@ -84,6 +84,15 @@ module.exports = function( app, config, passport ) {
 	app.use(passport.initialize());
 	app.use(passport.session());
 
+	// Assume 404 since no middleware responded.
+	app.use(function( err, req, res, next ) {
+		//Log it
+		console.log('Inside Express 404');
+
+		//Error page.
+		res.status(404).render('404', { error: 'Page not found.'});
+	});
+
 	//Assume "not found" in the rror msgs is a 404.
 	app.use(function( err, req, res, next ) {
 		//Treat as 404
@@ -94,14 +103,5 @@ module.exports = function( app, config, passport ) {
 
 		//Error page.
 		res.status(500).render('500', { error: err.stack });
-	});
-
-	// Assume 404 since no middleware responded.
-	app.use(function( err, req, res, next) {
-		//Log it
-		console.log( err.stack );
-
-		//Error page.
-		res.status(404).render('error', { error: err });
 	});
 };

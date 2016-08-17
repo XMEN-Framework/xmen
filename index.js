@@ -16,9 +16,12 @@ var express = require('express'),
 var XMEN = {
 	env: process.env.NODE_ENV || 'development',
 	config: null,
-	installed_apps: [],
-	routeMiddleware: null,
+	xmenConfig: require('./config/config.js'),
+	installedApps: [],
+	xmenApps: [],
+	routeMiddleware: require('./config/middleware/authorization'),
 	app: null,
+	appViewPaths: [],
 	bootstrap: function( config ) {
 		process.on('uncaughtException', function(err) {
 			console.log("Uncaught exception!");
@@ -26,15 +29,24 @@ var XMEN = {
 			console.log(err.stack);
 		});
 
+		if ( !config ) {
+			console.log('You must provide a config file!');
+			return;
+		}
+
 		this.loadConfig(config); // from require('config.js')
 		this.loadDB();
 		this.loadExpress();
 		this.loadHTTP();
-		this.initConfig();
-		this.initApps();
+		this.initExpress();
+		this.initCoreApps();
+		this.initApps( this.config.APP_ROOT, this.installedApps );
+		this.initAppViewPaths();
 	},
 	loadConfig: function( config ) {
 		this.config = config[this.env];
+		this.installedApps = this.config.INSTALLED_APPS;
+		this.xmenApps = this.xmenConfig.INSTALLED_APPS;
 	},
 	loadDB: function() {
 		if ( this.config.DB ) {
@@ -70,51 +82,61 @@ var XMEN = {
 		console.log('     _/  _/    _/      _/  _/        _/    _/_/');
 		console.log('  _/      _/  _/      _/  _/_/_/_/  _/      _/');
 		console.log('\n=====================================================\n\n');
-		console.log('XMEN framework app started on ' + config.APP.url);
+		console.log('XMEN framework app started on ' + this.config.APP.url);
 	},
-	initConfig: function() {
+	initExpress: function() {
 		require('./config/express')(this.app, this.config, passport);
-		require('./config/passport')(passport, this.config);
 	},
-	initApps: function() {
+	initCoreApps: function() {
+		this.initApps(this.xmenConfig.APP_ROOT, this.xmenApps);
+	},
+	initApps: function( appRoot, apps ) {
 		//Load all installed apps.
 		var appViewPaths = [];
-		for ( var i = 0, app; app = this.installed_apps[i]; i++ ) {
-			try {
-				//Load Models
-				if ( fs.existsSync(this.config.APP_ROOT + '/' + app + '/models') ) {
-					fs.readdirSync(this.config.APP_ROOT + '/' + app + '/models').forEach(function(file) {
-						if ( file ) {
-							var modelFile = this.config.APP_ROOT + '/' + app + '/models/' + file;
-							if ( fs.existsSync(modelFile) ) {
-								require(modelFile);
-							}
-						}
-					});
-				}
+		var xmen = this;
 
-				//Load Routes
-				if ( fs.existsSync(this.config.APP_ROOT + '/' + app + '/routes') ) {
-					fs.readdirSync(this.config.APP_ROOT + '/' + app + '/routes').forEach(function(file) {
-						if ( file ) {
-							var modelFile = this.config.APP_ROOT + '/' + app + '/routes/' + file;
-							if ( fs.existsSync(modelFile) ) {
-								require(modelFile)(this.app, passport, this.routeMiddleware);
+		if ( apps.length ) {
+			for ( var i = 0, app; app = apps[i]; i++ ) {
+				try {
+					//Load Models
+					if ( fs.existsSync(appRoot + '/' + app + '/models') ) {
+						fs.readdirSync(appRoot + '/' + app + '/models').forEach(function(file) {
+							if ( file ) {
+								var modelFile = appRoot + '/' + app + '/models/' + file;
+								if ( fs.existsSync(modelFile) ) {
+									require(modelFile);
+								}
 							}
-						}
-					});
-				}
+						});
+					}
 
-				//Load Views
-				appViewPaths.push(config.APP_ROOT + '/' + app + '/views');
-			} catch ( e ) {
-				console.log("Failed loading app: ", app);
-				console.error(e.stack);
+					//Load Routes
+					if ( fs.existsSync(appRoot + '/' + app + '/routes') ) {
+						fs.readdirSync(appRoot + '/' + app + '/routes').forEach(function(file) {
+							if ( file ) {
+								var modelFile = appRoot + '/' + app + '/routes/' + file;
+								if ( fs.existsSync(modelFile) ) {
+									require(modelFile)(xmen.app, passport, xmen.routeMiddleware);
+								}
+							}
+						});
+					}
+
+					//Load Views
+					xmen.appViewPaths.push(appRoot + '/' + app + '/views');
+				} catch ( e ) {
+					console.log("Failed loading app: ", app);
+					console.error(e.stack);
+				}
 			}
 		}
 
+		require('./config/passport')(passport, xmen.config);
+	},
+	initAppViewPaths: function() {
 		//Set view paths.
-		app.set('views', componentViewPaths);
+		console.log(this.appViewPaths);
+		this.app.set('views', this.appViewPaths);
 	}
 
 };
