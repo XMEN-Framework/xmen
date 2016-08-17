@@ -30,7 +30,7 @@ var XMEN = {
 		});
 
 		if ( !config ) {
-			console.log('You must provide a config file!');
+			console.log('Config file not provided!');
 			return;
 		}
 
