@@ -82,7 +82,7 @@ var XMEN = {
 		console.log('     _/  _/    _/      _/  _/        _/    _/_/');
 		console.log('  _/      _/  _/      _/  _/_/_/_/  _/      _/');
 		console.log('\n=====================================================\n\n');
-		console.log('XMEN framework app started on ' + this.config.APP.url);
+		console.log('XMEN framework app started on ' + this.config.PUBLIC_URL);
 	},
 	initExpress: function() {
 		require('./config/express')(this.app, this.config, passport);

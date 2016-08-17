@@ -12,7 +12,7 @@ module.exports = {
     'ROOT': rootPath,
     'CONFIG_ROOT': rootPath + '/config',
     'APP_ROOT': rootPath + '/app',
-    'PUBLIC_ROOT': rootPath + '/public',
+    'STATIC_ROOT': rootPath + '/static',
     'INSTALLED_APPS': [
         'admin',
         'users',

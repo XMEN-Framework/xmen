@@ -28,8 +28,8 @@ module.exports = function( app, config, passport ) {
 		level: 9
 	}));
 
-	//Set the public root to server static files
-	app.use(express.static(config.PUBLIC_ROOT));
+	//Set the static root to server static files
+	app.use(express.static(config.STATIC_ROOT));
 
 	//Don't user logged for test env
 	if ( process.env.NODE_ENV !== 'test' ) {

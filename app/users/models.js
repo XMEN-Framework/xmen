@@ -84,7 +84,7 @@ UserSchema.virtual('password')
 UserSchema.virtual('full_name')
     .get(function() {
         try {
-            var fullName = this.first_name + ' ' + this.last_name
+            var fullName = this.first_name + ' ' + this.last_name;
             return fullName;
         } catch ( e ) {
             return '';
