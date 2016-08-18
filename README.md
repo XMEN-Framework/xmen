@@ -94,3 +94,8 @@ A routes module is passed the `app`, `passport`, and `auth` middleware.
 ## Templates
 
 XMEN templates are rendered from a registered app's `templates/` directory.
+
+
+## Issues and Questions
+
+Join in the conversation in [Github Issues](https://github.com/XMEN-Framework/xmen/issues)
