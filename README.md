@@ -66,6 +66,7 @@ Example project structure of using the `config.js` above:
     project-name/
         app/
             custom_app/
+                index.js
         config/
             config.js
         node_modules/
@@ -78,17 +79,22 @@ Example project structure of using the `config.js` above:
 Registering models within XMEN works by setting up a Mongoose Schema. These models
 are automatically loaded.
 
-Include a `models.js` file within an app folder.
-
+    // custom_app/index.js
+    module.exports = {
+        models: require('./models')
+    };
 
 ## Routes
 
-XMEN apps can provide custom routes that are strucutred specifically for each app.
+XMEN apps can provide custom routes that are structured specifically for each app.
 These routes are automatically loaded.
 
-Include a `routes.js` file within an app folder.
-
 A routes module is passed the `app`, `passport`, and `auth` middleware.
+
+    // custom_app/index.js
+    module.exports = {
+        routes: require('./routes')
+    };
 
 
 ## Templates

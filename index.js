@@ -98,16 +98,11 @@ var XMEN = {
 		if ( apps.length ) {
 			for ( var i = 0, app; app = apps[i]; i++ ) {
 				try {
-					//Load Models
-					var modelFile = appRoot + '/' + app + '/models.js';
-					if ( fs.existsSync(modelFile) ) {
-						require(modelFile);
-					}
+					var appPackage = require(appRoot + '/' + app);
 
 					//Load Routes
-					var routeFile = appRoot + '/' + app + '/routes.js';
-					if ( fs.existsSync(routeFile) ) {
-						require(routeFile)(xmen.app, passport, xmen.routeMiddleware);
+					if ( appPackage.routes ) {
+						appPackage.routes(xmen.app, passport, xmen.routeMiddleware);
 					}
 
 					//Load Views
