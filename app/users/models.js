@@ -2,6 +2,7 @@
  * User Model
  */
 var mongoose = require('mongoose'),
+    mongoosePaginate = require('mongoose-paginate'),
     Schema = mongoose.Schema,
     crypto = require('crypto'),
     _ = require('underscore');
@@ -171,6 +172,13 @@ UserSchema.methods = {
 UserSchema.statics.makeSalt = function() {
     return Math.round(new Date().valueOf() * Math.random()) + '';
 };
+
+
+/**
+ * Plugins
+ */
+
+UserSchema.plugin(mongoosePaginate);
 
 
 //Register the model.
