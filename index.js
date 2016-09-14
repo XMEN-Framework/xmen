@@ -21,6 +21,7 @@ var XMEN = {
 	xmenApps: [],
 	routeMiddleware: require('./config/middleware/authorization'),
 	app: null,
+	server: null,
 	appViewPaths: [],
 	assemble: function( config ) {
 		process.on('uncaughtException', function(err) {
@@ -73,7 +74,7 @@ var XMEN = {
 		}));
 	},
 	loadHTTP: function() {
-		this.app.listen(this.config.PORT);
+		this.server = this.app.listen(this.config.PORT);
 
 		console.log('\n\n=====================================================\n');
 		console.log('      _/      _/  _/      _/  _/_/_/_/  _/      _/');
