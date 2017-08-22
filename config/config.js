@@ -1,52 +1,15 @@
-/**
- * Environment Configuration File
- *
- * Set environment variables and config values.
- */
+// config.js
 
 var path = require('path'),
-    rootPath = path.normalize(__dirname + '/..'),
-    fs = require('fs'),
-    nconf = require('nconf');
-
-nconf.use('memory');
-nconf.argv();
-nconf.env(['PORT']);
+rootPath = path.normalize(__dirname + '/..');
 
 module.exports = {
     'development': {
-        'db': 'mongodb://localhost/xmen', //example: mongodb://localhost/my-db
-        'ROOT': rootPath,
+        'DB': 'mongodb://localhost/xmen',
         'PORT': 8000,
-        'CONFIG_ROOT': rootPath + '/config',
-        'APP_ROOT': rootPath + '/app',
-        'PUBLIC_ROOT': rootPath + '/public',
-        'app': {
-            'name': 'XMEN Framework - DEVELOPMENT',
-            'url': 'http://localhost:8000'
-        },
-        'useSSL': false,
-        'sslKeyPath': '',
-        'sslCertPath': '',
-        'sslCAPath': '',
-        'sslRootPath': '',
-        'sslPassphrase': ''
-    },
-    'production': {
-        'db': '<mongodb connection>', //example: mongodb://localhost/my-db
-        'ROOT': rootPath,
-        'CONFIG_ROOT': rootPath + '/config',
-        'APP_ROOT': rootPath + '/app',
-        'PUBLIC_ROOT': rootPath + '/public',
-        'app': {
-            'name': 'XMEN Framework',
-            'url': 'http://xmen.io'
-        },
-        'useSSL': false,
-        'sslKeyPath': '',
-        'sslCertPath': '',
-        'sslCAPath': '',
-        'sslRootPath': '',
-        'sslPassphrase': ''
+        'SECRET': 'xmen',              
+        'APP_ROOT': rootPath + '/app',          
+        'STATIC_ROOT': rootPath + '/public',    
+        'PUBLIC_URL': 'http://localhost:8000'
     }
 };

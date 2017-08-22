@@ -1,3 +1,6 @@
+/* IDE */
+.vscode/
+
 /* NPM */
 node_modules
 .npm/
