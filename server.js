@@ -8,24 +8,32 @@ process.on('uncaughtException', (err) => {
     console.log(err.stack);
 });
 
-var express = require('express'),
-    http = require('http'),
-    errorhandler = require('errorhandler'),
-    passport = require('passport');
+var express = require('express');
+var http = require('http');
+var errorhandler = require('errorhandler');
+var passport = require('passport');
+var Logger = require('./xmen/debug/logger');
+var { Apps } = require('./xmen/core/apps');
 
 var env = process.env.NODE_ENV || 'development';
 var configFile = require('./config/config.js');
 var config = configFile[env];
 
 var mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 
-var db = mongoose.connect(config.DB, (err) => {
-    if (err) throw err;
-}).connection;
+var promise = mongoose.connect(config.DB, {
+    useMongoClient: true
+});
 
-db.on('error', (err) => console.log(err.message));
-db.on('open', () => console.log("MongoDB connection open"));
-db.on('close', () => console.log("MongoDB connection closed"));
+promise.then((db) => {
+    db.on('error', (err) => Logger(err.message));
+    db.on('open', () => Logger("MongoDB connection open"));
+    db.on('close', () => Logger("MongoDB connection closed"));
+}, (err) => {
+    Logger("Could not connect to Mongo");
+});
+
 
 var app = express();
 app.use(errorhandler({
@@ -43,18 +51,9 @@ console.log("XMEN server starting on port " + port);
  * App bootstrapping
  */
 
-require('./config/express')(app, config, passport);
+require('./xmen/express')(app, config, passport);
 
-require('./app/models');
-
-require('./config/passport')(passport, config);
-
-var auth = require('./config/middleware/authorization');
-
-require('./app/routes')(app, passport, auth);
-
-app.set('views', './app/views');
-
-var User = mongoose.model('User');
+Apps.setExpressApp(app);
+Apps.registerApps(config.INSTALLED_APPS);
 
 exports = module.exports = app;

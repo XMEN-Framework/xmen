@@ -10,6 +10,10 @@ module.exports = {
         'SECRET': 'xmen',              
         'APP_ROOT': rootPath + '/app',          
         'STATIC_ROOT': rootPath + '/public',    
-        'PUBLIC_URL': 'http://localhost:8000'
+        'PUBLIC_URL': 'http://localhost:8000',
+        'INSTALLED_APPS': [
+            'auth',
+            'public'
+        ]
     }
 };
