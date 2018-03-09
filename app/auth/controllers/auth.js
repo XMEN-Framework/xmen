@@ -8,19 +8,19 @@ var Token = mongoose.model("Token");
 var hat = require("hat");
 
 exports.loginPage = (req, res) => {
-  res.render("login");
+  res.render("auth/views/login");
 };
 
 exports.registerPage = (req, res) => {
-  res.render("register");
+  res.render("auth/views/register");
 };
 
 exports.forgotPasswordPage = (req, res) => {
-  res.render("forgot-password");
+  res.render("auth/views/forgot-password");
 };
 
 exports.resetPasswordPage = (req, res) => {
-  res.render("reset-password");
+  res.render("auth/views/reset-password");
 };
 
 exports.me = (req, res) => {

@@ -13,7 +13,7 @@ var http = require('http');
 var errorhandler = require('errorhandler');
 var passport = require('passport');
 var Logger = require('./xmen/debug/logger');
-var { Apps } = require('./xmen/core/apps');
+var { AppRegistry } = require('./xmen/core/app-registry');
 
 var env = process.env.NODE_ENV || 'development';
 var configFile = require('./config/config.js');
@@ -53,7 +53,7 @@ console.log("XMEN server starting on port " + port);
 
 require('./xmen/express')(app, config, passport);
 
-Apps.setExpressApp(app);
-Apps.registerApps(config.INSTALLED_APPS);
+AppRegistry.setExpressApp(app);
+AppRegistry.registerApps(config.INSTALLED_APPS);
 
 exports = module.exports = app;

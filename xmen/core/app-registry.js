@@ -45,9 +45,6 @@ class AppRegistryModule {
         // Load all routes in app.
         this.loadRoutes(app);
 
-        // Add the views
-        this.loadViews(app);
-
         this.registeredApps.push(app);
     }
 
@@ -62,7 +59,7 @@ class AppRegistryModule {
         }
 
         // Set the views.
-        this.expressApp.set('views', this.appViews);
+        this.expressApp.set('views', this.config.APP_ROOT);
     }
 
 
@@ -105,22 +102,6 @@ class AppRegistryModule {
                 app: app,
                 routesFile: routesFile
             });
-        }
-    }
-
-
-    /**
-     * If a views path exists in the app, load the views.
-     * @param {*} app 
-     */
-    loadViews(app) {
-        try {
-            let viewPath = `${this.config.APP_ROOT}/${app}/views`;
-            if (fs.existsSync(viewPath)) {
-                this.appViews.push(viewPath);
-            }
-        } catch (e) {
-            throw new AppFailedToRegister(`App ${app} failed to load views.`);
         }
     }
 }
