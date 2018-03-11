@@ -12,6 +12,7 @@ var GroupSchema = new Schema({
     },
     permissions: [{
         type: Schema.Types.ObjectId,
+        ref: 'Permission'
     }],
 
     created_at: {
