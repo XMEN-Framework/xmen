@@ -2,10 +2,11 @@
  * XMEN Core apps registry module for loading installed apps. 
  */
 
-var fs = require('fs');
-var express = require('express');
+const fs = require('fs');
+const express = require('express');
+const mongoose = require('mongoose');
 
-var { AppHasBeenRegistered, AppFailedToRegister } = require('./exceptions');
+const { AppHasBeenRegistered, AppFailedToRegister } = require('./exceptions');
 
 
 class AppRegistryModule {
@@ -13,18 +14,6 @@ class AppRegistryModule {
     constructor() {
         this.registeredApps = [];
         this.appViews = [];
-        this.expressApp = null;
-        this.config = null;
-    }
-
-
-    /**
-     * Set the express app on this module.
-     * @param {*} app 
-     */
-    setExpressApp(app) {
-        this.expressApp = app;
-        this.config = app.get('config');
     }
 
 
@@ -54,12 +43,10 @@ class AppRegistryModule {
      * @param {*} apps 
      */
     registerApps(apps) {
-        for(let app, i = 0; app = apps[i]; i++) {
-            this.registerApp(app);
-        }
+        apps.map(app => this.registerApp(app));
 
         // Set the views.
-        this.expressApp.set('views', this.config.APP_ROOT);
+        xmen.app.set('views', xmen.config.appRoot);
     }
 
 
@@ -68,21 +55,28 @@ class AppRegistryModule {
      * @param {*} app 
      */
     loadModels(app) {
-        let modelsPath = `${this.config.APP_ROOT}/${app}/models`;
+        let modelsPath = `${xmen.config.appRoot}/${app}/models`;
+        const ContentType = mongoose.model('ContentType');
+        const Permission = mongoose.model('Permission');
         try {
             if (fs.existsSync(modelsPath)) {
                 fs.readdirSync(modelsPath).forEach((file) => {
                     if (file) {
                         let modelFile = `${modelsPath}/${file}`;
                         if (fs.existsSync(modelFile)) {
-                            require(modelFile);
+                            let modelSchema = require(modelFile);
+
+                            ContentType.addModel(app, modelSchema.collection.name, (err, model) => {
+                                // Permissions create from model.
+                                Permission.createModelPermissions(model, modelSchema.collection.name)
+                            });
                         }
                     }
                 });
             }
         } catch (e) {
             throw new AppFailedToRegister(`App ${app} failed to load models.`, {
-                modelsPath: `${this.config.APP_ROOT}/${app}/models`,
+                modelsPath: `${xmen.config.appRoot}/${app}/models`,
                 app: app,       
             });
         }
@@ -94,9 +88,9 @@ class AppRegistryModule {
      * @param {*} app 
      */
     loadRoutes(app) {
-        let routesFile = `${this.config.APP_ROOT}/${app}/routes`;
+        let routesFile = `${xmen.config.appRoot}/${app}/routes`;
         try {
-            require(routesFile)(this.expressApp);
+            require(routesFile)(xmen.app);
         } catch(e) {
             throw new AppFailedToRegister(`App ${app} failed to load routes.`, {
                 app: app,
