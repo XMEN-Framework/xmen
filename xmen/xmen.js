@@ -183,7 +183,7 @@ class Xmen {
 
   loadCore() {
     // Load core models.
-    require("./core/models/content_type");
+    require("./core/models/content-type");
   }
 
   loadAuth() {
