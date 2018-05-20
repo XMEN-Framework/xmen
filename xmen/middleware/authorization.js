@@ -3,6 +3,10 @@
  */
 var mongoose = require('mongoose');
 
+
+/**
+ * Check if the request has an authenticated user.
+ */
 exports.requiresLogin = function( req, res, next ) {
 	//Not authenticated, send to login.
 	if ( !req.isAuthenticated() ) {
@@ -14,6 +18,9 @@ exports.requiresLogin = function( req, res, next ) {
 };
 
 
+/**
+ * Check if the request has an authenticated admin user.
+ */
 exports.requiresAdmin = function( req, res, next ) {
 	//Not authenticated, send to login.
 	if ( req.user ) {
@@ -31,6 +38,9 @@ exports.requiresAdmin = function( req, res, next ) {
 };
 
 
+/**
+ * Check if the request has an authenticated header token.
+ */
 exports.requiresToken = function( req, res, next ) {
     var authHeader = req.headers.authorization;
     if ( !authHeader ) {

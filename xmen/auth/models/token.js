@@ -14,6 +14,14 @@ var TokenSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
+    expires_at: {
+        type: Date,
+        default: () => {
+            let now = new Date();
+            now.setHours(now.getHours() + 1); // Default 1 hour expiry.
+            return now;
+        }
+    },
     created_at: {
         type: Date,
         default: new Date()
@@ -23,5 +31,6 @@ var TokenSchema = new mongoose.Schema({
         default: new Date()
     }
 });
+
 
 module.exports = mongoose.model('Token', TokenSchema);
