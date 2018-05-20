@@ -7,9 +7,6 @@ module.exports = {
   development: {
     database: null,
     port: 8000,
-    installedApps: [
-      // 'auth',
-      "public"
-    ]
+    installedApps: ["public"]
   }
 };
