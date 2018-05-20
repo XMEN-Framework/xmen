@@ -93,7 +93,7 @@ class AppRegistryModule {
   loadRoutes(app) {
     let routesFile = `${xmen.config.appRoot}/${app}/routes`;
     try {
-      require(routesFile)(xmen.app);
+      require(routesFile);
     } catch (e) {
       console.log(e.message);
       throw new AppFailedToRegister(`App ${app} failed to load routes.`, {

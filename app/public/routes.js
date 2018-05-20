@@ -1,17 +1,12 @@
 /**
-* Public routes
-*/
+ * Public routes
+ */
 "use strict";
 
-var express = require('express');
-var router = express.Router();
+const express = require("express");
+const router = express.Router();
+const publicController = require("./controllers/public");
 
-module.exports = function(app) {
+router.get("/", publicController.homePage);
 
-    var publicController = require('./controllers/public');
-
-    router.get('/', publicController.homePage);
-
-    app.use('/', router);
-    
-};
+xmen.app.use("/", router);
