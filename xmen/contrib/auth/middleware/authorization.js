@@ -85,9 +85,7 @@ exports.requiresAdmin = function(req, res, next) {
 exports.authenticateAdmin = (req, res, next) => {
   //Not authenticated, send to admin login.
   if (req.user) {
-    console.log("User logged in");
     if (!req.user.is_superuser) {
-      console.log("User not a super user, redirect");
       return res.redirect("/admin/login");
       res.locals.user = req.user;
     }
