@@ -28,12 +28,14 @@ class AppRegistryModule {
     }
 
     // Require the app.
+    let appPath = app;
     try {
-      require(app);
+      require(appPath);
     } catch (e) {
       // Can't be resolved by default path, try relative.
       try {
-        require(xmen.config.rootPath + "/" + app);
+        appPath = xmen.config.rootPath + "/" + app;
+        require(appPath);
       } catch (e) {
         throw new AppFailedToRegister(
           `App '${app}' failed to register: \n` + e.message
@@ -43,7 +45,7 @@ class AppRegistryModule {
     }
 
     // Load all models in app.
-    this.loadModels(app);
+    this.loadModels(appPath);
 
     this.registeredApps.push(app);
   }
@@ -61,7 +63,7 @@ class AppRegistryModule {
    * @param {*} app
    */
   loadModels(app) {
-    let modelsPath = `${xmen.config.appRoot}/${app}/models`;
+    let modelsPath = `${app}/models`;
     try {
       if (fs.existsSync(modelsPath)) {
         fs.readdirSync(modelsPath).forEach(file => {
@@ -75,7 +77,7 @@ class AppRegistryModule {
       }
     } catch (e) {
       throw new AppFailedToRegister(`App ${app} failed to load models.`, {
-        modelsPath: `${xmen.config.appRoot}/${app}/models`,
+        modelsPath: `${app}/models`,
         app: app
       });
     }

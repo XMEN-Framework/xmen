@@ -1,6 +1,3 @@
-/**
- * The installed apps have not been registered.
- */
 const { XMENException } = require("../core/exceptions");
 
 class AppsNotRegistered extends XMENException {}

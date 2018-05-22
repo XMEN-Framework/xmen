@@ -17,14 +17,14 @@ router.get("/logout", auth.authenticateAdmin, authController.logout);
 router.post(
   "/login",
   passport.authenticate("local", {
-    failureRedirect: "/manage/login",
+    failureRedirect: "/admin/login",
     failureFlash: "Invalid email or password."
   }),
   authController.login
 );
 
-xmen.app.use("/manage", (req, res, next) => {
+xmen.app.use("/admin", (req, res, next) => {
   res.locals.user = req.user;
   next();
 });
-xmen.app.use("/manage", router);
+xmen.app.use("/admin", router);

@@ -22,8 +22,3 @@ xmen.app.use(
 xmen.app.use(passport.initialize());
 xmen.app.use(cookieParser());
 xmen.app.use(passport.session());
-
-require("./models/permission");
-require("./models/group");
-require("./models/user");
-require("./models/token");

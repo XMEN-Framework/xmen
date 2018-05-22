@@ -12,10 +12,10 @@ exports.login = (req, res) => {
   req.user.last_login = new Date();
   req.user.save();
 
-  return res.redirect("/manage");
+  return res.redirect("/admin");
 };
 
 exports.logout = (req, res) => {
   req.logout();
-  return res.redirect("/manage/login");
+  return res.redirect("/admin/login");
 };
