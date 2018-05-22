@@ -10,10 +10,8 @@
 const express = require("express");
 const http = require("http");
 const errorhandler = require("errorhandler");
-const passport = require("passport");
 const mongoose = require("mongoose");
 const compression = require("compression");
-const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const methodOverride = require("method-override");
@@ -21,7 +19,7 @@ const helmet = require("helmet");
 const cors = require("cors");
 
 const logger = require("./debug/logger");
-let { AppRegistry } = require("./core/app-registry");
+const { AppRegistry } = require("./apps/app-registry");
 
 /**
  * Xmen server.
@@ -37,17 +35,19 @@ class Xmen {
     // Logger
     this.log = logger;
 
+    this.viewPaths = [__dirname];
+
     this.config = {
+      rootPath: null,
       startTime: Date.now(),
-      root: process.cwd(),
-      host: process.env.HOST || "localhost",
-      port: process.env.PORT || 8080,
-      environment: process.env.NODE_ENV || "development",
-      database: null,
-      appRoot: process.cwd() + "/app",
+      databases: null,
       staticRoot: process.cwd() + "/public",
-      cacheView: false,
-      installedApps: []
+      installedApps: [],
+      xsAllowCredentials: true,
+      xsAllowOrigin: "*",
+      xsAllowMethods: "GET,HEAD,OPTIONS,POST,PUT,PATCH,DELETE",
+      xsAllowHeaders:
+        "Origin, X-Requested-With, Content-Type, Accept, Authorization"
     };
   }
 
@@ -56,7 +56,7 @@ class Xmen {
       this.log.debug(
         `Server Setup: Loading config for ${this.config.environment}`
       );
-      this.config = Object.assign(this.config, config[this.config.environment]);
+      this.config = Object.assign(this.config, config);
 
       this.bootstrap();
     } catch (e) {
@@ -68,16 +68,10 @@ class Xmen {
 
   bootstrap() {
     // Connect to database.
-    this.database();
+    this.setupDatabase();
 
     // Set up middleware
-    this.middleware();
-
-    // Load core app
-    this.loadCore();
-
-    // Load auth app
-    this.loadAuth();
+    this.setupExpressMiddleware();
 
     // Load installed apps.
     this.loadApps();
@@ -86,12 +80,12 @@ class Xmen {
     this.listen();
   }
 
-  database() {
-    if (!this.config.database) return;
+  setupDatabase() {
+    if (!this.config.databases) return;
 
     this.log.debug("Server Setup: Connecting to database.");
     mongoose.Promise = global.Promise;
-    var promise = mongoose.connect(this.config.database, {
+    var promise = mongoose.connect(this.config.databases.default.uri, {
       useMongoClient: true
     });
 
@@ -121,8 +115,8 @@ class Xmen {
     this.log.debug("XMEN server starting on port " + this.config.port);
   }
 
-  middleware() {
-    this.log.debug("Server Setup: Loading middleware");
+  setupExpressMiddleware() {
+    this.log.debug("Server Setup: Configuring Express");
     this.app.set("showStackError", true);
 
     this.app.use(helmet());
@@ -138,7 +132,7 @@ class Xmen {
     );
 
     // Set the static root to serve files.
-    this.app.use(express.static(this.config.staticRoot));
+    this.app.use(express.static(this.config.staticPath));
 
     this.app.use(morgan("dev"));
 
@@ -146,7 +140,10 @@ class Xmen {
     this.app.set("view engine", "pug");
 
     // Set view cache
-    this.app.set("view cache", this.config.cacheView);
+    this.app.set("view cache", true);
+
+    this.viewPaths.push(this.config.rootPath + "/apps");
+    this.app.set("views", this.viewPaths);
 
     // Enable jsonp
     this.app.enable("jsonp callback");
@@ -158,63 +155,18 @@ class Xmen {
     // Use method override
     this.app.use(methodOverride());
 
-    // Use passport session
-    this.app.use(passport.initialize());
-    this.app.use(cookieParser());
-    this.app.use(passport.session());
-
     this.app.use(cors());
 
     // Set cors.
     this.app.use((req, res, next) => {
-      res.header("Access-Control-Allow-Credentials", true);
-      res.header("Access-Control-Allow-Origin", "*");
       res.header(
-        "Access-Control-Allow-Methods",
-        "GET,HEAD,OPTIONS,POST,PUT,PATCH,DELETE"
+        "Access-Control-Allow-Credentials",
+        this.config.xsAllowCredentials
       );
-      res.header(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-      );
+      res.header("Access-Control-Allow-Origin", this.config.xsAllowOrigin);
+      res.header("Access-Control-Allow-Methods", this.config.xsAllowMethods);
+      res.header("Access-Control-Allow-Headers", this.config.xsAllowHeaders);
       next();
-    });
-  }
-
-  loadCore() {
-    // Load core models.
-    require("./core/models/content-type");
-  }
-
-  loadAuth() {
-    // Load auth models.
-    require("./auth/models/permission");
-    require("./auth/models/group");
-    require("./auth/models/user");
-    require("./auth/models/token");
-
-    const ContentType = mongoose.model("ContentType");
-    const Permission = mongoose.model("Permission");
-    const Group = mongoose.model("Group");
-    const User = mongoose.model("User");
-    const Token = mongoose.model("Token");
-
-    // Add content types to database.
-    ContentType.addModel(
-      "xmen_auth",
-      Permission.collection.name,
-      (err, model) => {
-        // Create permissions
-        Permission.createModelPermissions(model);
-      }
-    );
-    ContentType.addModel("xmen_auth", Group.collection.name, (err, model) => {
-      // Create permissions
-      Permission.createModelPermissions(model);
-    });
-    ContentType.addModel("xmen_auth", User.collection.name, (err, model) => {
-      // Create permissions
-      Permission.createModelPermissions(model);
     });
   }
 
