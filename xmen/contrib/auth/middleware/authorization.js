@@ -129,6 +129,8 @@ exports.requiresToken = function(req, res, next) {
         });
       }
 
+      token.refresh();
+
       req.token = token;
       req.user = token.user;
 

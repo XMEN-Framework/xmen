@@ -32,4 +32,11 @@ var TokenSchema = new mongoose.Schema({
   }
 });
 
+TokenSchema.methods.refresh = () => {
+  let expiry = new Date();
+  expiry.setHours(expiry.getHours() + 1); // Expiry in an hour.
+  this.expires_at = expiry;
+  this.save();
+};
+
 module.exports = mongoose.model("Token", TokenSchema, "xmen_tokens");
