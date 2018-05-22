@@ -27,11 +27,23 @@ class AppRegistryModule {
       return;
     }
 
+    // Require the app.
+    try {
+      require(app);
+    } catch (e) {
+      // Can't be resolved by default path, try relative.
+      try {
+        require(xmen.config.rootPath + "/" + app);
+      } catch (e) {
+        throw new AppFailedToRegister(
+          `App '${app}' failed to register: \n` + e.message
+        );
+        return;
+      }
+    }
+
     // Load all models in app.
     this.loadModels(app);
-
-    // Load all routes in app.
-    this.loadRoutes(app);
 
     this.registeredApps.push(app);
   }
@@ -42,9 +54,6 @@ class AppRegistryModule {
    */
   registerApps(apps) {
     apps.map(app => this.registerApp(app));
-
-    // Set the views.
-    xmen.app.set("views", xmen.config.appRoot);
   }
 
   /**
@@ -53,8 +62,6 @@ class AppRegistryModule {
    */
   loadModels(app) {
     let modelsPath = `${xmen.config.appRoot}/${app}/models`;
-    const ContentType = mongoose.model("ContentType");
-    const Permission = mongoose.model("Permission");
     try {
       if (fs.existsSync(modelsPath)) {
         fs.readdirSync(modelsPath).forEach(file => {
@@ -62,18 +69,6 @@ class AppRegistryModule {
             let modelFile = `${modelsPath}/${file}`;
             if (fs.existsSync(modelFile)) {
               let modelSchema = require(modelFile);
-
-              ContentType.addModel(
-                app,
-                modelSchema.collection.name,
-                (err, model) => {
-                  // Permissions create from model.
-                  Permission.createModelPermissions(
-                    model,
-                    modelSchema.collection.name
-                  );
-                }
-              );
             }
           }
         });
@@ -85,23 +80,8 @@ class AppRegistryModule {
       });
     }
   }
-
-  /**
-   * If a routes file exists in the app, load the routes.
-   * @param {*} app
-   */
-  loadRoutes(app) {
-    let routesFile = `${xmen.config.appRoot}/${app}/routes`;
-    try {
-      require(routesFile);
-    } catch (e) {
-      console.log(e.message);
-      throw new AppFailedToRegister(`App ${app} failed to load routes.`, {
-        app: app,
-        routesFile: routesFile
-      });
-    }
-  }
 }
 
-module.exports.AppRegistry = new AppRegistryModule();
+module.exports = {
+  AppRegistry: new AppRegistryModule()
+};
