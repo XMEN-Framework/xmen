@@ -24,25 +24,28 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
-const emailQuestion = () =>
-  new Promise((resolve, reject) => {
+function emailQuestion() {
+  return new Promise((resolve, reject) => {
     rl.question("Email: ", resolve);
   });
+}
 
-const passwordQuestion = () =>
-  new Promise((resolve, reject) => {
+function passwordQuestion() {
+  return new Promise((resolve, reject) => {
     rl.stdoutMuted = false;
     rl.question("Password: ", resolve);
     rl._writeToOutput = stringToWrite => rl.output.write("*");
   });
+}
 
-const main = async () => {
+async function main() {
+  console.log("Please enter an email and password for a new admin account.");
   const email = await emailQuestion();
   const password = await passwordQuestion();
   rl.close();
 
   createAdmin(email, password);
-};
+}
 
 function createAdmin(email, password) {
   console.log("\nCreating admin", email);
@@ -56,7 +59,7 @@ function createAdmin(email, password) {
     password: password
   });
 
-  admin.save(err => {
+  return admin.save(err => {
     if (err) {
       console.log("[ERROR] There was an error creating admin.");
       console.log(err.message);
