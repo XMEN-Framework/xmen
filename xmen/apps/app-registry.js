@@ -83,7 +83,7 @@ class AppRegistryModule {
   }
 
   appHasBeenRegistered(appName) {
-    return this.registeredApps.indexOf(app) > -1;
+    return this.registeredApps.indexOf(appName) > -1;
   }
 }
 
