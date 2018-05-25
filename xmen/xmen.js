@@ -37,6 +37,7 @@ class Xmen {
 
     this.viewPaths = [__dirname];
 
+    // Default configuration options.
     this.config = {
       rootPath: null,
       startTime: Date.now(),

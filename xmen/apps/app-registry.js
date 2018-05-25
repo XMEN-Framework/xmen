@@ -20,11 +20,10 @@ class AppRegistryModule {
    */
   registerApp(app) {
     // Make sure app hasn't been registered already
-    if (this.registeredApps.indexOf(app) > -1) {
+    if (this.appHasBeenRegistered(app)) {
       throw new AppHasBeenRegistered(
         `App '${app}' has already been registered`
       );
-      return;
     }
 
     // Require the app.
@@ -81,6 +80,10 @@ class AppRegistryModule {
         app: app
       });
     }
+  }
+
+  appHasBeenRegistered(appName) {
+    return this.registeredApps.indexOf(app) > -1;
   }
 }
 
