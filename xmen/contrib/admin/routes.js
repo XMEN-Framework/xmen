@@ -12,6 +12,7 @@ const adminController = require("./controllers/admin");
 const authController = require("./controllers/auth");
 
 router.get("/login", authController.loginPage);
+router.get("/logout", adminAuth.authenticateAdmin, authController.logout);
 
 router.get("/", adminAuth.authenticateAdmin, adminController.home);
 router.get(
@@ -41,7 +42,6 @@ router.post(
   adminController.modelEdit
 );
 
-router.get("/logout", adminAuth.authenticateAdmin, authController.logout);
 router.post(
   "/login",
   passport.authenticate("local", {

@@ -1,3 +1,6 @@
+/**
+ * Command line tool to create a new admin user.
+ */
 process.on("uncaughtException", err => {
   console.log(err);
 });
@@ -10,9 +13,12 @@ const config = require("../../config/config")[env];
 
 const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
-const db = mongoose.connect(config.databases.default.uri, {
-  useMongoClient: true
-});
+const db = mongoose.connect(
+  config.databases.default.uri,
+  {
+    useMongoClient: true
+  }
+);
 
 // Boostrap models.
 require("../contrib/auth/models/user");
