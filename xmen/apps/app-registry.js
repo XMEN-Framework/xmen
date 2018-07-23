@@ -12,6 +12,7 @@ class AppRegistryModule {
   constructor() {
     this.registeredApps = [];
     this.appViews = [];
+    this.afterRegistryCallback = [];
   }
 
   /**
@@ -28,13 +29,14 @@ class AppRegistryModule {
 
     // Require the app.
     let appPath = app;
+    let appModule = null;
     try {
-      require(appPath);
+      appModule = require(appPath);
     } catch (e) {
       // Can't be resolved by default path, try relative.
       try {
         appPath = xmen.config.rootPath + "/" + app;
-        require(appPath);
+        appModule = require(appPath);
       } catch (e) {
         throw new AppFailedToRegister(
           `App '${app}' failed to register: \n` + e.message
@@ -47,6 +49,9 @@ class AppRegistryModule {
     this.loadModels(appPath);
 
     this.registeredApps.push(app);
+    if (appModule.afterRegistry) {
+      this.afterRegistryCallback.push(appModule.afterRegistry);
+    }
   }
 
   /**
@@ -55,6 +60,7 @@ class AppRegistryModule {
    */
   registerApps(apps) {
     apps.map(app => this.registerApp(app));
+    this.afterRegistryCallback.map(cb => cb());
   }
 
   /**
@@ -69,7 +75,7 @@ class AppRegistryModule {
           if (file) {
             let modelFile = `${modelsPath}/${file}`;
             if (fs.existsSync(modelFile)) {
-              let modelSchema = require(modelFile);
+              require(modelFile);
             }
           }
         });

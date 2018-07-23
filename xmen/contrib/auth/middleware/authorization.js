@@ -64,38 +64,6 @@ exports.requiresLogin = function(req, res, next) {
 };
 
 /**
- * Check if the request has an authenticated admin user.
- */
-exports.requiresAdmin = function(req, res, next) {
-  //Not authenticated, send to login.
-  if (req.user) {
-    if (!req.user.is_superuser) {
-      return res.status(401).send({
-        message: "Authentication credentials were not provided."
-      });
-    }
-  } else {
-    return res.status(401).send({
-      message: "Authentication credentials were not provided."
-    });
-  }
-  next();
-};
-
-exports.authenticateAdmin = (req, res, next) => {
-  //Not authenticated, send to admin login.
-  if (req.user) {
-    if (!req.user.is_superuser) {
-      return res.redirect("/admin/login");
-      res.locals.user = req.user;
-    }
-  } else {
-    return res.redirect("/admin/login");
-  }
-  next();
-};
-
-/**
  * Check if the request has an authenticated header token.
  */
 exports.requiresToken = function(req, res, next) {

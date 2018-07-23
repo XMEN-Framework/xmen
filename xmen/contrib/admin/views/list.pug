@@ -1,0 +1,21 @@
+extends layouts/dashboard
+
+block content
+
+    h3=modelName
+
+    a(href="/admin/"+modelName+'/create') Add New
+
+    table
+        tr
+            each listField in adminModel.listDisplay
+                th=listField
+            th Actions
+        each doc in docs 
+            tr
+                each listField in adminModel.listDisplay
+                    td=doc[listField]
+
+                td 
+                    a(href="/admin/"+modelName+'/'+doc._id) Edit
+                        

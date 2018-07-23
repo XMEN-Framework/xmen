@@ -2,4 +2,11 @@ h1 XMEN - Admin
 
 p Hello #{user.first_name}!
 
+h4 Models
+
+ul
+    each model in models
+        li
+            a(href="/admin/" + model)=model
+
 a(href="/admin/logout") Log Out

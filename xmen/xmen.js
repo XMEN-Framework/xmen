@@ -35,6 +35,7 @@ class Xmen {
     // Logger
     this.log = logger;
 
+    // View paths
     this.viewPaths = [__dirname];
 
     // Default configuration options.
@@ -86,9 +87,12 @@ class Xmen {
 
     this.log.debug("Server Setup: Connecting to database.");
     mongoose.Promise = global.Promise;
-    var promise = mongoose.connect(this.config.databases.default.uri, {
-      useMongoClient: true
-    });
+    var promise = mongoose.connect(
+      this.config.databases.default.uri,
+      {
+        useMongoClient: true
+      }
+    );
 
     return promise.then(
       db => {

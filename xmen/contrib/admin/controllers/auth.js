@@ -3,6 +3,7 @@
  */
 
 exports.loginPage = (req, res) => {
+  console.log("Loading login view");
   return res.render("contrib/admin/views/login", {
     flash: req.flash()
   });
