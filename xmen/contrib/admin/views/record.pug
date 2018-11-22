@@ -1,0 +1,22 @@
+extends layouts/dashboard
+
+block content
+
+    if (doc)
+        h3 Edit #{modelName}
+    else
+        h3 Create #{modelName}
+
+    form(action=action method="POST")
+        each field in fields
+            if (!fieldControls[field].options.selected)
+                .form-group
+                    if (fieldControls[field].instance === 'String')
+                        label(for="")=field
+                        input(type="text" name=field value=(doc ? doc[field] : ''))
+                    else if (fieldControls[field].instance === 'Boolean')
+                        label(for="")=field
+                        input(type="checkbox" name=field value="1" checked=(doc ? doc[field] : ''))
+            
+        .form-group
+            button(type="submit") Save

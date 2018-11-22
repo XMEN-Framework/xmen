@@ -12,12 +12,15 @@ module.exports = {
     rootPath: rootPath,
 
     // Secret key, remove this key from production files, keep this secret.
-    secretKey: "xmen",
+    secretKey: "{{ secret_key }}",
 
     // Project settings
 
-    // Include either node_module or relative path. Must be in order.
-    installedApps: ["xmen/contrib/auth", "xmen/contrib/admin"],
+    // Include either node_module or relative path.
+    installedApps: [
+      "@xmen/admin", 
+      "@xmen/auth"
+    ],
 
     middleware: [],
 
@@ -30,17 +33,6 @@ module.exports = {
     },
 
     // Server settings
-
-    host: "localhost",
-    port: 8000,
-
-    // Cors settings
-    xsAllowCredentials: true,
-    xsAllowOrigin: "*",
-    xsAllowMethods: "GET,HEAD,OPTIONS,POST,PUT,PATCH,DELETE",
-    xsAllowHeaders:
-      "Origin, X-Requested-With, Content-Type, Accept, Authorization",
-
-    staticPath: rootPath + "/public"
+    port: 8000
   }
 };

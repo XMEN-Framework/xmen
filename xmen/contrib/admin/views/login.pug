@@ -1,0 +1,14 @@
+h1 XMEN - Login
+
+if(flash.error)
+    p= flash.error
+
+form(method='POST' action='/admin/login')
+    .form-control
+        input(type="text" placeholder="Email" name="email")
+    
+    .form-control
+        input(type="password" placeholder="Password" name="password")
+
+    .form-control
+        button(type="submit") Login
