@@ -5,6 +5,7 @@ const models = AdminSite.registry;
 exports.home = (req, res) => {
   // Get all admin models.
   const links = Object.keys(models);
+
   res.render("contrib/admin/views/home", {
     models: links
   });

@@ -23,6 +23,7 @@ class AdminSite {
         `The model ${mongooseModel} is already registered.`
       );
     }
+
     this.registry[mongooseModel.modelName] = new adminClass(
       mongooseModel,
       this

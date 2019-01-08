@@ -22,3 +22,5 @@ xmen.app.use(
 xmen.app.use(passport.initialize());
 xmen.app.use(cookieParser());
 xmen.app.use(passport.session());
+
+require("./admin");

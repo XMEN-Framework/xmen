@@ -41,7 +41,6 @@ class AppRegistryModule {
         throw new AppFailedToRegister(
           `App '${app}' failed to register: \n` + e.message
         );
-        return;
       }
     }
 
