@@ -1,0 +1,23 @@
+mixin pagination(pagination)
+    if (pagination.perPage < pagination.count)
+        p.text-muted Showing #{pagination.perPage} of #{pagination.count}
+    else
+        p.text-muted Showing #{pagination.count} of #{pagination.count}
+    nav
+        ul.pagination
+            if(pagination.totalPages > 1)
+                li.page-item
+                    a.page-link(href=url + '&page=1') First
+            if (pagination.hasPrev)
+                li.page-item
+                    a.page-link(href=url + '&page=' + (pagination.currentPage - 1)) Prev
+            each page in pagination.pages
+                li.page-item(class=(page.isCurrent) ? 'active': '')
+                    a.page-link(href=url + '&page=' + page.num)=page.num
+            if (pagination.hasNext)
+                li.page-item
+                    a.page-link(href=url + '&page=' + + (pagination.currentPage + 1)) Next
+            if(pagination.totalPages > 1)
+                li.page-item
+                    a.page-link(href=url + '&page=' + pagination.totalPages) Last
+

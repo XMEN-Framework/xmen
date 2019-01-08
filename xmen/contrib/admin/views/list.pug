@@ -1,4 +1,5 @@
 extends layouts/dashboard
+include ./mixins/pagination
 
 block content
 
@@ -18,4 +19,6 @@ block content
 
                 td 
                     a(href="/admin/"+modelName+'/'+doc._id) Edit
+    
+    +pagination(pagination)
                         

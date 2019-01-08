@@ -35,7 +35,6 @@ class AdminSite {
   }
 
   isRegistered(mongooseModel) {
-    console.log(mongooseModel.modelName);
     return !!this.registry[mongooseModel.modelName];
   }
 }

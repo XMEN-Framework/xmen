@@ -1,21 +1,22 @@
 const { AdminSite } = require("../site");
+const Pagination = require("../pagination");
 
 const models = AdminSite.registry;
 
 exports.home = (req, res) => {
   // Get all admin models.
   const links = Object.keys(models);
-
   res.render("contrib/admin/views/home", {
     models: links
   });
 };
 
-exports.modelListPage = (req, res) => {
+exports.modelListPage = async (req, res) => {
   // Check parameters
   const model = req.params.model;
-  const limit = req.query.limit || 25;
-  const page = req.query.page || 0;
+  const limit = parseInt(req.query.limit) || 25;
+  const page = parseInt(req.query.page) || 1;
+  const offset = limit * (page - 1);
   const sort = req.query.sort || null;
   const sortPredicate = req.query.direction || "asc";
   const search = req.query.search || null;
@@ -50,19 +51,30 @@ exports.modelListPage = (req, res) => {
   // Find records related to query.
   let queryset = adminModel.model.find(query);
 
+  const queryCount = await adminModel.model.count(query);
+
   if (sortQuery) {
     queryset = queryset.sort(sortQuery);
   }
 
-  queryset = queryset.limit(limit).skip(page * limit);
+  queryset = queryset.limit(limit).skip(offset);
 
-  queryset.exec((err, docs) => {
-    res.render("contrib/admin/views/list", {
-      query: req.query,
-      adminModel: adminModel,
-      modelName: adminModel.model.modelName,
-      docs: docs
-    });
+  const docs = await queryset.exec();
+
+  const pagination = new Pagination(queryCount, limit, page, 5);
+  const url = `/admin/${model}?limit=${limit}`;
+
+  if (search) {
+    url += `&search=${search}`;
+  }
+
+  res.render("contrib/admin/views/list", {
+    query: req.query,
+    adminModel: adminModel,
+    modelName: adminModel.model.modelName,
+    docs: docs,
+    url,
+    pagination
   });
 };
 
